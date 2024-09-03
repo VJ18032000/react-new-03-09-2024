@@ -5,15 +5,11 @@ import Register from './components/Register';
 import Dashboard from './components/Dashboard';
 
 function App() {
-    const handleLogin = () => {
-        // Handle login state
-    };
-
     return (
         <Router>
             <div className="App">
                 <Routes>
-                    <Route path="/" element={<Login onLogin={handleLogin} />} />
+                    <Route path="/" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                 </Routes>

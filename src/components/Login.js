@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import AlertMessage from './AlertMessage';
 
 
-const Login = ({ setToken }) => {
+const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [alertMessage, setAlertMessage] = useState('');
@@ -24,7 +23,6 @@ const Login = ({ setToken }) => {
                 console.log(response.data);
                 setAlertMessage(response.data.message);
                 setAlertType('success');
-                // setToken(response.data.token);
                 navigate('/dashboard'); 
             }
         } catch (error) {
