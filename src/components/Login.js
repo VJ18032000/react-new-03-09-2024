@@ -1,50 +1,56 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import AlertMessage from './AlertMessage';
 
-const Login = ({ onLogin }) => {
+
+const Login = ({ setToken }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [alertMessage, setAlertMessage] = useState('');
-    const [showAlert, setShowAlert] = useState(false);
+    const [alertType, setAlertType] = useState('');
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if(email==="admin"&&password==="admin"){
-            console.log("gdyfg")
-            onLogin();
-            navigate('/dashboard'); 
-        }else {
-            setAlertMessage('Invalid email or password. Please try again.');
-            setShowAlert(true);
+        try {
+            const response = await axios.post('http://localhost:2000/login', { email, password });
+            if (response.data.status === "Error") {
+                console.log(response.data)
+                setAlertMessage(response.data.message);
+                setAlertType('danger');
+            } else {
+                console.log(response.data);
+                setAlertMessage(response.data.message);
+                setAlertType('success');
+                // setToken(response.data.token);
+                navigate('/dashboard'); 
+            }
+        } catch (error) {
+            console.log(error)
         }
-    };
-
-    const handleCloseAlert = () => {
-        setShowAlert(false);
     };
 
     return (
         <div className="container">
             <h2>Login</h2>
-            {showAlert && (
-                <AlertMessage
-                    type="danger"
-                    message={alertMessage}
-                    onClose={handleCloseAlert}
-                />
+
+            {alertMessage && (
+                <div className={`alert alert-${alertType} mt-3`} role="alert">
+                    {alertMessage}
+                </div>
             )}
+
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                    <label className="form-label">Email address</label>
+                    <label className="form-label">Email</label>
                     <input
-                        type="text"
+                        type="email"
                         className="form-control"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        // required
+                        required
                     />
                 </div>
                 <div className="mb-3">
@@ -57,7 +63,9 @@ const Login = ({ onLogin }) => {
                         required
                     />
                 </div>
-                <button type="submit" className="btn btn-primary">Login</button>
+                <button type="submit" className="btn btn-primary">
+                    Login
+                </button>
             </form>
             <p>Don't have an account? <Link to="/register">Register here</Link></p>
         </div>
