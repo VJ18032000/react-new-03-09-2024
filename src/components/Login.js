@@ -6,7 +6,8 @@ import AlertMessage from './AlertMessage';
 const Login = ({ onLogin }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [alert, setAlert] = useState(null);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [showAlert, setShowAlert] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = (e) => {
@@ -16,15 +17,25 @@ const Login = ({ onLogin }) => {
             onLogin();
             navigate('/dashboard'); 
         }else {
-            console.log("asjhkcfabfsb")
-            setAlert({ type: 'danger', message: 'Invalid email or password. Please try again.' });
+            setAlertMessage('Invalid email or password. Please try again.');
+            setShowAlert(true);
         }
+    };
+
+    const handleCloseAlert = () => {
+        setShowAlert(false);
     };
 
     return (
         <div className="container">
             <h2>Login</h2>
-            {alert && <AlertMessage type={alert.type} message={alert.message} />}
+            {showAlert && (
+                <AlertMessage
+                    type="danger"
+                    message={alertMessage}
+                    onClose={handleCloseAlert}
+                />
+            )}
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label className="form-label">Email address</label>
